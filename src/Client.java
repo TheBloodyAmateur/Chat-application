@@ -17,9 +17,9 @@ public class Client
         //The input and output variables are used to read and send messages from the host
         DataInputStream input = new DataInputStream(System.in);
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+        String line = "";
 
         //Name of the client is sent to the host
-        String line = "";
         output.writeUTF(name);
 
         //The class ClientListener receives messages from the host program and displays them

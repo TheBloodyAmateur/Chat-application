@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ClientHandler extends Thread
 {
@@ -20,14 +23,30 @@ public class ClientHandler extends Thread
     @Override
     public void run()
     {
+        //When ever a client connects the previous chat is loaded
+        if(Host.chatProtocol != null)
+        {
+            try
+            {
+                output.writeUTF(Host.chatProtocol.toString());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         //If a client wants to cut the connection to the server he must type "over"
         while (!line.equals("over"))
         {
             try
             {
                 line = input.readUTF();
-                System.out.println(line + "\n");
-                sendMessageAllClients();
+                Host.chatProtocol.append(line + "\n");
+                System.out.println(line);
+                sendMessageAllClients(line);
+                //The messages are stored in a .txt file
+                saveMessage(Host.chatProtocol.toString());
             }
             catch(IOException e)
             {
@@ -36,7 +55,7 @@ public class ClientHandler extends Thread
         }
     }
 
-    public void sendMessageAllClients() throws IOException
+    public void sendMessageAllClients(String message) throws IOException
     {
         PrintWriter toclient;
 
@@ -47,5 +66,12 @@ public class ClientHandler extends Thread
             toclient.println(line);
         }
 
+    }
+
+    public static void saveMessage(String message) throws FileNotFoundException
+    {
+        PrintWriter writer = new PrintWriter(new FileOutputStream("chat.txt",false));
+        writer.print(message);
+        writer.close();
     }
 }

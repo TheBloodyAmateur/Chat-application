@@ -2,9 +2,7 @@
     This is the program which acts as the host!
     In this case the program listens on port 50000.
 */
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ public class Host extends Thread
 {
     //This list is used to store all clients in it.
     public static ArrayList<ClientHandler> clientList = new ArrayList<>();
+    public static StringBuilder chatProtocol = new StringBuilder();
 
     public static void main (String[] args) throws IOException
     {
